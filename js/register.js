@@ -2,6 +2,9 @@ const inputs = document.querySelectorAll("form .field input");
 const labels = document.querySelectorAll("form .field label");
 
 for (let i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener("focus",() => {
+        document.getElementById("err").innerText = "";
+    })
     inputs[i].addEventListener("change",(e) => {
         if(e.target.value != ""){
             labels[i].classList.add("active");
@@ -10,6 +13,7 @@ for (let i = 0; i < inputs.length; i++) {
         }
     });
 }
+
 
 const showPass = () => {
     document.getElementById('password').type = "text";
@@ -22,3 +26,47 @@ const hidePass = () => {
     document.getElementById('show').classList.remove("active");
 }
 
+const registerUser = () => {
+    const form = document.getElementById("register-fm");
+    
+    
+    const f = new FormData(form);
+    
+    let data = "";
+    
+    for (const [key,value] of f) {
+        data+=key+"="+value+"&";
+    }
+    // data = "fname=Vignesh&lname=Arumugam&contact=1234567890&dob=2023-03-16&email=thirukriz08@gmail.com&password=asdfghjkl&";
+    console.log(data);
+
+
+    $.ajax({
+        type: 'post',
+        url: "./php/register.php", 
+        dataType: 'json',
+        data: data,
+        beforeSend: function() {
+            alert(data);
+            $('#submit').attr('disabled', true);
+        },
+        complete: function() {
+            alert('af');
+            $('#submit').attr('disabled', false);
+        },  
+        success: function(data)
+        {
+            if(data.type == 'error')
+            {
+                let err = document.getElementById("err");
+                if(data.text == "Input fields are empty!" || data.text == "Invalid email format" || data.text == "Invalid contact number" || data.text == "Password should be >= 8 and <= 16"){
+                    err.innerText = data.text;
+                } else {
+                    alert(data.text);
+                }
+            }else{
+                alert(data.text);
+            }          
+        }
+    });
+}

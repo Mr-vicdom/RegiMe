@@ -1,6 +1,6 @@
 <?php
 
-function createUser($fname,$lname,$contact,$dob,$email,$password){
+function checkUser($email,$password){
     
     $servername = "localhost";
     $username = "root";
@@ -9,11 +9,8 @@ function createUser($fname,$lname,$contact,$dob,$email,$password){
     // $servername = "sql.freedb.tech:3306";
     // $username = "freedb_vicdom";
     // $password = "keB7?NPV**EfNW2";
-    
-    // $fname = "Vic";
-    // $lname = "ky";
+
     // $email = "vicky@hmai.com";
-    // $dob = "2023-03-05";
     // $password = "kjadajhre";
     
     $output = json_encode(array('type' => 'error', 'text' => 'DB Connection failed'));
@@ -23,27 +20,15 @@ function createUser($fname,$lname,$contact,$dob,$email,$password){
         die($output);
     }
 
-    $sql = "SELECT email FROM users WHERE email = ?";
+    $sql = "SELECT email,password FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     
     $stmt->execute();
     $result = $stmt->get_result();
     
-    if($user = $result->fetch_assoc()){
-        $output = json_encode(array('type' => 'result', 'text' => "Record already created"));
-        die($output);
-    }
-    
-    $stmt = $conn->prepare("INSERT INTO users (fname, lname, contact, dob, email,password) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $fname, $lname, $contact, $dob, $email, $password);
-    
-
-    if ($stmt->execute()) {
-        $output = json_encode(array('type' => 'result', 'text' => "New record created successfully"));
-        die($output);
-    } else {
-        $output = json_encode(array('type' => 'error', 'text' => "Record creation failed"));
+    if(!$user = $result->fetch_assoc()){
+        $output = json_encode(array('type' => 'result', 'text' => "User not found"));
         die($output);
     }
 
@@ -52,14 +37,11 @@ function createUser($fname,$lname,$contact,$dob,$email,$password){
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $output = "";
-    $fname = $_POST["fname"];
-    $lname = $_POST["lname"];
-    $contact = $_POST["contact"];
-    $dob = $_POST["dob"];
+
     $email = $_POST["email"];
     $password = $_POST['password'];
     
-    if ($fname == "" || $lname == "" || $contact == "" || $dob == "" || $email == "" || $password == "") {
+    if ($email == "" || $password == "") {
         $output = json_encode(array('type' => 'error', 'text' => 'Input fields are empty!'));
         die($output);
     }
@@ -69,17 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die($output);
     }
     
-    if(strlen($contact) != 10){
-        $output = json_encode(array('type' => 'error', 'text' => "Invalid contact number"));
-        die($output);
-    }
-    
     if(!(strlen($password) >= 8 && strlen($password) <= 16)){
         $output = json_encode(array('type' => 'error', 'text' => "Password should be >= 8 and <= 16"));
         die($output);
     }
 
-    createUser($fname,$lname,$contact,$dob,$email,$password);
+    checkUser($email,$password);
 }
 
 ?>
