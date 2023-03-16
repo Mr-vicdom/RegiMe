@@ -35,7 +35,7 @@ function checkUser($email,$password,$success,$failure,$redis){
     }
     
     if($user['password'] == $password){
-        $result = $failure->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s') , 'error' =>  "Login successfull" ] );
+        $result = $success->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s')] );
         $output = json_encode(array('type' => 'result', 'text' => "Login successfull"));
 
         foreach ($user as $key => $value) {
