@@ -4,7 +4,7 @@ function createUser($fname,$lname,$contact,$dob,$email,$password){
     
     $servername = "localhost";
     $username = "root";
-    $password = "";
+    $dbpassword = "";
     $dbname = "userdetails";
     // $servername = "sql.freedb.tech:3306";
     // $username = "freedb_vicdom";
@@ -15,10 +15,10 @@ function createUser($fname,$lname,$contact,$dob,$email,$password){
     // $email = "vicky@hmai.com";
     // $dob = "2023-03-05";
     // $password = "kjadajhre";
-    
+
     $output = json_encode(array('type' => 'error', 'text' => 'DB Connection failed'));
     try {
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        $conn = mysqli_connect($servername, $username, $dbpassword, $dbname);
     } catch (\Throwable $th) {
         die($output);
     }
@@ -40,7 +40,7 @@ function createUser($fname,$lname,$contact,$dob,$email,$password){
     
 
     if ($stmt->execute()) {
-        $output = json_encode(array('type' => 'result', 'text' => "New record created successfully"));
+        $output = json_encode(array('type' => 'result', 'text' => "New record created successfully".$password));
         die($output);
     } else {
         $output = json_encode(array('type' => 'error', 'text' => "Record creation failed"));
@@ -58,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dob = $_POST["dob"];
     $email = $_POST["email"];
     $password = $_POST['password'];
+
+    
     
     if ($fname == "" || $lname == "" || $contact == "" || $dob == "" || $email == "" || $password == "") {
         $output = json_encode(array('type' => 'error', 'text' => 'Input fields are empty!'));

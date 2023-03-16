@@ -1,10 +1,10 @@
 <?php
 
-function checkUser($email,$password,$success,$failure,$redis){
+function checkUser($email,$password,$success,$failure){
     
     $servername = "localhost";
     $username = "root";
-    $dbpassword = "";
+    $password = "";
     $dbname = "userdetails";
     // $servername = "sql.freedb.tech:3306";
     // $username = "freedb_vicdom";
@@ -15,13 +15,13 @@ function checkUser($email,$password,$success,$failure,$redis){
     
     $output = json_encode(array('type' => 'error', 'text' => 'DB Connection failed'));
     try {
-        $conn = mysqli_connect($servername, $username, $dbpassword, $dbname);
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
     } catch (\Throwable $th) {
         $result = $failure->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s') , 'error' => 'DB Connection failed'] );
         print_r(mysqli_connect_error()) && die($output);
     }
 
-    $sql = "SELECT * FROM users WHERE email = ?";
+    $sql = "SELECT email,password FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     
@@ -37,12 +37,6 @@ function checkUser($email,$password,$success,$failure,$redis){
     if($user['password'] == $password){
         $result = $failure->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s') , 'error' =>  "Login successfull" ] );
         $output = json_encode(array('type' => 'result', 'text' => "Login successfull"));
-
-        foreach ($user as $key => $value) {
-            $redis->set($key,$value);
-        }
-
-
         die($output);
     } else {
         $result = $failure->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s') , 'error' =>  "Incorrect password" ] );
@@ -55,50 +49,44 @@ function checkUser($email,$password,$success,$failure,$redis){
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    require '../css/vendor/autoload.php';
     require '../css/vendor/predis/predis/autoload.php';
     
     Predis\Autoloader::register();
-    
-    $redis = new Predis\Client(array(
-        "scheme" => "tcp",
-        "host" => "127.0.0.1",
-        "port" => '6379',
-        "password" => ""));
 
-    $client = new MongoDB\Client("mongodb://localhost:27017");
+    $output = json_encode(array('type' => 'error', 'text' => 'Redis connection failed'));
 
-    $db = $client->userlog;
-
-    $success = $db->success;
-    $failure = $db->failure;
-
-    
-    $output = "";
-    
-    $email = $_POST["email"];
-    $password = $_POST['password'];
-    
-    
-    if ($email == "" || $password == "") {
-        $result = $failure->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s') , 'error' => 'Input fields are empty!' ]);
-        $output = json_encode(array('type' => 'error', 'text' => 'Input fields are empty!'));
+    try {
+        $redis = new Predis\Client(array(
+            "scheme" => "tcp",
+            "host" => "127.0.0.1",
+            "port" => '6379',
+            "password" => "")) or die($output);;
+    } catch (\Throwable $th) {
         die($output);
     }
+
+    // echo "Connected to Redis<br>";
+
+    // echo "Server is running: ".$redis->ping()."<br>"; 
     
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $result = $failure->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s') , 'error' => "Invalid email format"] );
-        $output = json_encode(array('type' => 'error', 'text' => "Invalid email format"));
-        die($output);
+    $arList = $redis->keys("*"); 
+
+    $output = [];
+    
+    foreach ($arList as $value) {
+        $output[$value] = $redis->get($value);
     }
-    
-    if(!(strlen($password) >= 8 && strlen($password) <= 16)){
-        $result = $failure->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s') , 'error' => "Password should be >= 8 and <= 16"] );
-        $output = json_encode(array('type' => 'error', 'text' => "Password should be >= 8 and <= 16"));
-        die($output);
-    }
-    
-    checkUser($email,$password,$success,$failure,$redis);
+
+    // $output = json_encode($output);
+
+    $output = json_encode(array("type" => "result", "text" => $output));
+
+    die($output);
+
+    // $redis->set("fname", "uiij");
+
+    // echo $redis->del("fname");
+
 }
 
 ?>
