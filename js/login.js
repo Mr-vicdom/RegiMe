@@ -26,6 +26,40 @@ const hidePass = () => {
     document.getElementById('show').classList.remove("active");
 }
 
+const removeNotice = () => {
+    document.getElementById("notice").remove();
+}
+
+const isLogged = () => {
+    // alert("al");
+    $.ajax({
+        type: 'get',
+        url: "./php/register.php", 
+        dataType: 'json',
+        data: "",
+        beforeSend: function() {
+            // alert(data);
+            $('#submit').attr('disabled', true);
+        },
+        complete: function() {
+            // alert('af');
+            $('#submit').attr('disabled', false);
+        },  
+        success: function(data)
+        {
+            if(data.type != 'error')
+            {
+                if(data.text == "redirect"){
+                    window.location.replace("./profile.html");
+                }
+            }         
+        }
+    });
+}
+
+isLogged();
+
+
 const loginUser = () => {
     const form = document.getElementById("login-fm");
     
@@ -47,11 +81,11 @@ const loginUser = () => {
         dataType: 'json',
         data: data,
         beforeSend: function() {
-            alert(data);
+            // alert(data);
             $('#submit').attr('disabled', true);
         },
         complete: function() {
-            alert('af');
+            // alert('af');
             $('#submit').attr('disabled', false);
         },  
         success: function(data)
@@ -62,10 +96,20 @@ const loginUser = () => {
                 if(data.text == "Input fields are empty!" || data.text == "Invalid email format" || data.text == "Password should be >= 8 and <= 16"){
                     err.innerText = data.text;
                 } else {
-                    alert(data.text);
+                    document.body.innerHTML += `<div id="notice" class="notice"> <div class="line"></div>
+                        <div class="content">${data.text}</div>
+                        <button onclick="removeNotice()">❌</button></div>`
+                setTimeout(() => {
+                    removeNotice();
+                },6000);
                 }
             }else{
-                alert(data.text);
+                document.body.innerHTML += `<div id="notice" class="notice"> <div class="line"></div>
+                        <div class="content">${data.text}</div>
+                        <button onclick="removeNotice()">❌</button></div>`
+                setTimeout(() => {
+                    removeNotice();
+                },6000);
             }          
         }
     });

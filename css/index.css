@@ -193,6 +193,76 @@ a{
     color: unset;
 }
 
+.notice{
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+    bottom: 10vh;
+    right: 5vw;
+    width: 25vw;
+    box-sizing: border-box;
+    padding: 20px;
+    padding-top:15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    overflow: hidden;
+    animation: loadOp 5s linear;
+}
+.notice .line{
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background-color: red;
+    top: 0;
+    transform: translateX(-100%);
+    animation: load 5s linear;
+}
+.notice .content{
+    font-size: 1vw;
+    color: var(--bgColor);
+    letter-spacing: 0.15vw;
+}
+.notice button{
+    outline: none;
+    border: none;
+    width: 25%;
+    height: 100%;
+    font-size: 1vw;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+@keyframes load {
+    0%{
+        transform: translateX(-100%);
+    }
+    25%{
+        transform: translateX(-75%);
+    }
+    50%{
+        transform: translateX(-50%);
+    }
+    75%{
+        transform: translateX(-25%);
+    }
+    100%{
+        transform: translateX(0);
+    }
+}
+@keyframes loadOp {
+    0%{
+        opacity: 1;
+    }
+    50%{
+        opacity: 0.85;
+    }
+    100%{
+        opacity: 0.7;
+    }
+}
+
 @media screen and (max-width: 768px) {
     header .logo .logo-txt{
         font-size: 2vh;

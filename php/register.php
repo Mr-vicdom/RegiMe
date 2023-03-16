@@ -40,7 +40,7 @@ function createUser($fname,$lname,$contact,$dob,$email,$password){
     
 
     if ($stmt->execute()) {
-        $output = json_encode(array('type' => 'result', 'text' => "New record created successfully".$password));
+        $output = json_encode(array('type' => 'result', 'text' => "New record created successfully"));
         die($output);
     } else {
         $output = json_encode(array('type' => 'error', 'text' => "Record creation failed"));
@@ -80,8 +80,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $output = json_encode(array('type' => 'error', 'text' => "Password should be >= 8 and <= 16"));
         die($output);
     }
-
+    
     createUser($fname,$lname,$contact,$dob,$email,$password);
 }
+
+if($_SERVER['REQUEST_METHOD'] == 'GET'){
+    require '../css/vendor/predis/predis/autoload.php';
+    
+    Predis\Autoloader::register();
+    
+    $redis = new Predis\Client(array(
+        "scheme" => "tcp",
+        "host" => "127.0.0.1",
+        "port" => '6379',
+        "password" => ""));
+        
+        $arList = $redis->keys("*"); 
+        
+        if(count($arList) == 6){
+            $output = json_encode(array('type' => 'result', 'text' => "redirect"));
+            die($output);
+        }
+        $output = json_encode(array('type' => 'error', 'text' => "no redirect"));
+        die($output);
+    }
 
 ?>
