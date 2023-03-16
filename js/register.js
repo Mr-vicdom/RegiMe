@@ -21,3 +21,4 @@ const hidePass = () => {
     document.getElementById('hide').classList.add("active");
     document.getElementById('show').classList.remove("active");
 }
+
