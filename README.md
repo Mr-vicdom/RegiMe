@@ -12,5 +12,5 @@ Infinityfree Link - [RegiMe](http://regime.rf.gd/) - with php but no mongo & red
 ## Hosted in Local Computer with Ngrok
 Ngrok Link - [RegiMe](https://c522-103-196-28-186.in.ngrok.io) - with php + mysql, mongo, redis <br><br>
 ✅  To view the hosted website, the server must be running continuously. If the website does not respond, the server needs to be refreshed.
-<br><br><br
+<br><br>
 ## Contact Me Further
