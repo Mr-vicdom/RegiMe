@@ -1,14 +1,17 @@
 <?php
 
 function checkUser($email,$password,$success,$failure,$redis){
+
+
     
     $servername = "localhost";
     $username = "root";
     $dbpassword = "";
     $dbname = "userdetails";
-    // $servername = "sql.freedb.tech:3306";
-    // $username = "freedb_vicdom";
-    // $password = "keB7?NPV**EfNW2";
+    // $servername = "sql200.epizy.com";
+    // $username = "epiz_33808338";
+    // $dbpassword = "w1KjzvGhIUC";
+    // $dbname = "epiz_33808338_userdetails";
     
     // $email = "vicky@hmai.com";
     // $password = "kjadajhre";
@@ -18,7 +21,7 @@ function checkUser($email,$password,$success,$failure,$redis){
         $conn = mysqli_connect($servername, $username, $dbpassword, $dbname);
     } catch (\Throwable $th) {
         $result = $failure->insertOne( [ 'email' => $email , 'password' => $password, 'date' => date('d:m:y') , 'time' => date('h:i:s') , 'error' => 'DB Connection failed'] );
-        print_r(mysqli_connect_error()) && die($output);
+        die($output);
     }
 
     $sql = "SELECT * FROM users WHERE email = ?";

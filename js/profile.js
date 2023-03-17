@@ -1,3 +1,5 @@
+host = ""
+
 const inputs = document.querySelectorAll("form .field input");
 const labels = document.querySelectorAll("form .field label");
 
@@ -48,7 +50,7 @@ const edit = () => {
 
     $.ajax({
         type: 'post',
-        url: "./php/profile.php", 
+        url: host != "" ? host + "/php/profile.php" : "./php/profile.php", 
         dataType: 'json',
         data: data,
         beforeSend: function() {
@@ -95,7 +97,7 @@ const edit = () => {
 const logout = () => {
     $.ajax({
         type: 'delete',
-        url: "./php/profile.php", 
+        url: host != "" ? host + "/php/profile.php" : "./php/profile.php", 
         dataType: 'json',
         data: '',
         beforeSend: function() {
@@ -128,7 +130,7 @@ const logout = () => {
 
 $.ajax({
     type: 'get',
-    url: "./php/profile.php", 
+    url: host != "" ? host + "/php/profile.php" : "./php/profile.php", 
     dataType: 'json',
     data: data,
     beforeSend: function() {

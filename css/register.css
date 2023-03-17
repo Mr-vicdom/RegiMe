@@ -12,6 +12,7 @@
 form{
     /* background-color: blue; */
     width: 100%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -100,4 +101,19 @@ form .field .inf .icon.active{
 form .field .inf .icon svg{
     width: 50%;
     cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    form .field .inf input{
+        font-size: 1vh;
+    }
+    form .field .inf label:has(+ input:focus){
+        font-size: 0.8vh;
+    }
+    form .field .inf label{
+        font-size: 1vh;
+    }
+    .page-note{
+        font-size: 1vh;
+    }
 }

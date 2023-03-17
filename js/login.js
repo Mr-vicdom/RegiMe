@@ -1,3 +1,5 @@
+host = ""
+
 const inputs = document.querySelectorAll("form .field input");
 const labels = document.querySelectorAll("form .field label");
 
@@ -34,7 +36,7 @@ const isLogged = () => {
     // alert("al");
     $.ajax({
         type: 'get',
-        url: "./php/register.php", 
+        url: host != "" ? host + "/php/register.php" : "./php/register.php", 
         dataType: 'json',
         data: "",
         beforeSend: function() {
@@ -77,7 +79,7 @@ const loginUser = () => {
 
     $.ajax({
         type: 'post',
-        url: "./php/login.php", 
+        url: host != "" ? host + "/php/login.php" : "./php/login.php", 
         dataType: 'json',
         data: data,
         beforeSend: function() {
