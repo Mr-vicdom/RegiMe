@@ -16,6 +16,4 @@ Ngrok Link - [RegiMe](https://f696-103-196-28-186.in.ngrok.io) - with php + mysq
 ## Contact Me Further
 
 
-[<video>
-  <source src="https://f696-103-196-28-186.in.ngrok.io/assets/demo.mp4"></source>
-</video>](https://f696-103-196-28-186.in.ngrok.io/assets/demo.mp4)
+https://f696-103-196-28-186.in.ngrok.io/assets/demo.mp4
