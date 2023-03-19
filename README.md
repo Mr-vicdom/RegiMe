@@ -16,4 +16,6 @@ Ngrok Link - [RegiMe](https://f696-103-196-28-186.in.ngrok.io) - with php + mysq
 ## Contact Me Further
 
 
-https://f696-103-196-28-186.in.ngrok.io/assets/demo.mp4
+[![Now in Android: 55]          // Title
+(https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg)] // Thumbnail
+(https://www.youtube.com/watch?v=Hc79sDi3f0U "Now in Android: 55")    
